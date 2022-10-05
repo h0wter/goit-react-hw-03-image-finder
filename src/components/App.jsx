@@ -1,4 +1,6 @@
 import { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { GlobalStyle } from './GlobalStyle';
 import { SearchBar } from './SearchBar/SearchBar';
 import { getImages } from 'Services/api';
@@ -23,6 +25,9 @@ export class App extends Component {
     ) {
       this.setState({ loading: true });
       const images = await getImages(this.state.query, this.state.page);
+      if (images.total === 0) {
+        toast.info('No images found. Try another request.');
+      }
       this.setState(prevState => {
         return {
           images: [...prevState.images, ...images.hits],
@@ -64,6 +69,17 @@ export class App extends Component {
           </Box>
         )}
 
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <GlobalStyle />
       </AppContainer>
     );
